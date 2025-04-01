@@ -135,3 +135,8 @@ body {
   .add-form-button:hover {
     opacity: 0.9;
   }
+
+  .error {
+    outline: none;
+    border: 3px solid red;
+  }
