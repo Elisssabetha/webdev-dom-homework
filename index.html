@@ -66,115 +66,93 @@
   </body>
 
   <script>
+    const btn = document.getElementById("btn");
+    const nameInput = document.getElementById("nameInput");
+    const commentInput = document.getElementById("commentInput");
+    const commentsList = document.querySelector(".comments");
 
-    const btn = document.getElementById('btn');
-    const nameInput = document.getElementById('nameInput');
-    const commentInput = document.getElementById('commentInput');
-    const commentsList = document.querySelector('.comments');
-
-    btn.addEventListener('click', function() {
-      nameInput.classList.remove('error')
-      commentInput.classList.remove('error')
+    btn.addEventListener("click", function () {
+      nameInput.classList.remove("error");
+      commentInput.classList.remove("error");
 
       const name = nameInput.value;
-      const comm = commentInput.value
+      const comm = commentInput.value;
 
       // проверка на пустое поле имени
-      if (name === '') {
-        nameInput.classList.add('error');
+      if (name === "") {
+        nameInput.classList.add("error");
       }
 
       // проверка на пустое поле комментария
-      if (comm === '') {
-        commentInput.classList.add('error');
+      if (comm === "") {
+        commentInput.classList.add("error");
       }
       // выходим, если или коммент, или поле пустое
-      if (name === '' || comm === '') {
+      if (name === "" || comm === "") {
         return;
       }
 
       // собираем коммент
       const comment = createComment(name, comm);
       // добавляем в html
-      commentsList.appendChild(comment)
+      commentsList.appendChild(comment);
 
       // очищаем поля ввода
-      nameInput.value = '';
-      commentInput.value = '';
+      nameInput.value = "";
+      commentInput.value = "";
     });
 
-
     const createComment = (name, comm) => {
-      // блок комментария
-      const commentEl = document.createElement('li');
-      commentEl.className = 'comment';
+      const date = new Date()
+        .toLocaleDateString("ru-RU", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+        .replace(",", "");
 
-      // блок  comment-header (в нем будет лежать имя и дата)
-      const commentHeader = document.createElement('div');
-      commentHeader.className = 'comment-header';
+      const li = document.createElement("li");
+      li.className = "comment";
 
-      // имя
-      const nameEl = document.createElement('div');
-      nameEl.textContent = name; // имя пользователя
-
-      // дата
-      const dateEl = document.createElement('div');
-      dateEl.textContent = new Date().toLocaleDateString('ru-RU', {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      }).replace(',', '');
-
-      // собираем header
-      commentHeader.append(nameEl, dateEl);
-
-      // блок  comment-body (в нем будет лежать сам комментарий)
-      const commentBody = document.createElement('div');
-      commentBody.className = 'comment-body';
-
-      // комментарий
-      const commentText = document.createElement('div');
-      commentText.className = 'comment-text';
-      commentText.textContent = comm; //то что ввел пользователь
-
-      // добавляем комментарий в блок комментария
-      commentBody.append(commentText);
-
-      //футер (в нем будут лежать кнопка лайка и кол-во лайков)
-      const commentFooter = document.createElement('div');
-      commentFooter.className = 'comment-footer';
-
-      // блок лайков
-      const likes = document.createElement('div');
-      likes.className = 'likes';
-      
-      // счетчик лайков
-      const likesCounter = document.createElement('span');
-      likesCounter.className = 'likes-counter';
-      likesCounter.textContent = '0';
-
-      // кнопка лайка
-      const likeButton = document.createElement('button');
-      likeButton.className = 'like-button';
-
-      // собираем блок лайков
-      likes.append(likesCounter, likeButton);
-
-      //собираем футер
-      commentFooter.append(likes);
-
-      // сборка основного блока
-      commentEl.append(commentHeader, commentBody, commentFooter);
-
-      return commentEl
-    }
+      li.innerHTML = `
+    <div class="comment-header">
+      <div>${name}</div>
+      <div>${date}</div>
+    </div>
+    <div class="comment-body">
+      <div class="comment-text">
+        ${comm}
+      </div>
+    </div>
+    <div class="comment-footer">
+      <div class="likes">
+        <span class="likes-counter">0</span>
+        <button class="like-button"></button>
+      </div>
+    </div>
+  `;
+      return li;
+    };
 
     // Альтернативный вариант
-    
-    // const createComment = (name, comm) =>  {
-    //   const date = new Date().toLocaleDateString('ru-RU', {
+    // const createComment = (name, comm) => {
+    //   // блок комментария
+    //   const commentEl = document.createElement('li');
+    //   commentEl.className = 'comment';
+
+    //   // блок  comment-header (в нем будет лежать имя и дата)
+    //   const commentHeader = document.createElement('div');
+    //   commentHeader.className = 'comment-header';
+
+    //   // имя
+    //   const nameEl = document.createElement('div');
+    //   nameEl.textContent = name; // имя пользователя
+
+    //   // дата
+    //   const dateEl = document.createElement('div');
+    //   dateEl.textContent = new Date().toLocaleDateString('ru-RU', {
     //     day: '2-digit',
     //     month: '2-digit',
     //     year: '2-digit',
@@ -182,26 +160,48 @@
     //     minute: '2-digit'
     //   }).replace(',', '');
 
-    //   return document.createElement('li').innerHTML = `
-    //   <li class="comment">
-    //     <div class="comment-header">
-    //       <div>${name}</div>
-    //       <div>${date}</div>
-    //     </div>
-    //     <div class="comment-body">
-    //       <div class="comment-text">
-    //         ${comm}
-    //       </div>
-    //     </div>
-    //     <div class="comment-footer">
-    //       <div class="likes">
-    //         <span class="likes-counter">0</span>
-    //         <button class="like-button"></button>
-    //       </div>
-    //     </div>
-    //   </li>
-    // `;
-    // }
+    //   // собираем header
+    //   commentHeader.append(nameEl, dateEl);
 
+    //   // блок  comment-body (в нем будет лежать сам комментарий)
+    //   const commentBody = document.createElement('div');
+    //   commentBody.className = 'comment-body';
+
+    //   // комментарий
+    //   const commentText = document.createElement('div');
+    //   commentText.className = 'comment-text';
+    //   commentText.textContent = comm; //то что ввел пользователь
+
+    //   // добавляем комментарий в блок комментария
+    //   commentBody.append(commentText);
+
+    //   //футер (в нем будут лежать кнопка лайка и кол-во лайков)
+    //   const commentFooter = document.createElement('div');
+    //   commentFooter.className = 'comment-footer';
+
+    //   // блок лайков
+    //   const likes = document.createElement('div');
+    //   likes.className = 'likes';
+
+    //   // счетчик лайков
+    //   const likesCounter = document.createElement('span');
+    //   likesCounter.className = 'likes-counter';
+    //   likesCounter.textContent = '0';
+
+    //   // кнопка лайка
+    //   const likeButton = document.createElement('button');
+    //   likeButton.className = 'like-button';
+
+    //   // собираем блок лайков
+    //   likes.append(likesCounter, likeButton);
+
+    //   //собираем футер
+    //   commentFooter.append(likes);
+
+    //   // сборка основного блока
+    //   commentEl.append(commentHeader, commentBody, commentFooter);
+
+    //   return commentEl
+    // }
   </script>
 </html>
