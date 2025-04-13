@@ -81,13 +81,20 @@
             </div>
           </div>
         `;
+
+        li.addEventListener("click", (event) => {
+          commentInput.value = `>> ${comment.name}: \n>> ${comment.text}`;
+        });
+
+
         // добавляем новый элемент к списку
         commentsList.appendChild(li);
       });
 
       // обработка нажатия кнопки лдайка
       document.querySelectorAll(".like-button").forEach((btn) => {
-        btn.addEventListener("click", function() {
+        btn.addEventListener("click", function (event) {
+          event.stopPropagation();
           const index = btn.dataset.index;
           comments[index].isLiked = !comments[index].isLiked; // меняем на обратный
           comments[index].likes += comments[index].isLiked ? 1 : -1; //в зависимости от того какой нажат или нет лайк плюсуем или вычитаем 1
@@ -104,8 +111,14 @@
       commentInput.classList.remove("error");
 
       // получаем введенные значения
-      const name = nameInput.value.trim();
-      const comm = commentInput.value.trim();
+      const name = nameInput.value
+        .trim()
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+      const comm = commentInput.value
+        .trim()
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
 
       // проверка на пустое поле имени
       if (name === "") nameInput.classList.add("error");
