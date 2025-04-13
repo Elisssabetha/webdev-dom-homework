@@ -104,8 +104,8 @@
       commentInput.classList.remove("error");
 
       // получаем введенные значения
-      const name = nameInput.value;
-      const comm = commentInput.value;
+      const name = nameInput.value.trim();
+      const comm = commentInput.value.trim();
 
       // проверка на пустое поле имени
       if (name === "") nameInput.classList.add("error");
