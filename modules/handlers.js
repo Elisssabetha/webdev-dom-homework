@@ -1,6 +1,10 @@
 import { addComment } from "./comments.js";
 import { renderComments } from "./render.js";
-import { replaceSymbols } from "./replaceSymbols.js"  
+import { replaceSymbols } from "./replaceSymbols.js";
+// import { format } from "date-fns";
+// import { ru } from 'date-fns/locale';
+import { format } from '../node_modules/date-fns/index.js';
+import { ru } from '../node_modules/date-fns/locale/ru.js';
 
 
 // Обработчик добавления комментария
@@ -21,13 +25,7 @@ export const tapAddCommentBtn = (nameInput, commentInput, commentsList) => {
   
       const newComment = {
         name,
-        date: new Date().toLocaleDateString("ru-RU", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-        }).replace(",", ""),
+        date: format(new Date(), 'dd.MM.yy HH:mm', { locale: ru }),
         text,
         likes: 0,
         isLiked: false,
