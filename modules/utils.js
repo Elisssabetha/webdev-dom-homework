@@ -17,7 +17,7 @@ export const tapLikeBtn = (commentsList) => {
 // Обработчик цитирования
 export const quoteComm = (li, comment) => {
     li.addEventListener("click", (event) => {
-        commentInput.value = `>> ${comment.name}: \n>> ${comment.text}`;
+        commentInput.value = `>> ${comment.author.name}: \n>> ${comment.text}`;
       });
 }
 
