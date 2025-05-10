@@ -1,10 +1,10 @@
-import { addComment } from "./comments.js";
-import { renderComments } from "./render.js";
+import { getComments } from "./utils.js";
 import { replaceSymbols } from "./replaceSymbols.js";
 // import { format } from "date-fns";
 // import { ru } from 'date-fns/locale';
-import { format } from '../node_modules/date-fns/index.js';
-import { ru } from '../node_modules/date-fns/locale/ru.js';
+// import { format } from '../node_modules/date-fns/index.js';
+// import { ru } from '../node_modules/date-fns/locale/ru.js';
+import { comments, updateComments } from "./comments.js";
 
 
 // Обработчик добавления комментария
@@ -25,14 +25,16 @@ export const tapAddCommentBtn = (nameInput, commentInput, commentsList) => {
   
       const newComment = {
         name,
-        date: format(new Date(), 'dd.MM.yy HH:mm', { locale: ru }),
-        text,
-        likes: 0,
-        isLiked: false,
+        text
       };
   
-      addComment(newComment);
-      renderComments(commentsList);
+      fetch('https://wedev-api.sky.pro/api/v1/lizzy-karankevich/comments', {
+        method: 'POST',
+        body: JSON.stringify(newComment)
+      }).then(response => response.json())
+        .then(() => {
+          getComments(commentsList)
+      })
 
       nameInput.value = "";
       commentInput.value = "";
