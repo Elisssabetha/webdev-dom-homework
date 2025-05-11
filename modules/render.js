@@ -1,17 +1,21 @@
 import { comments } from "./comments.js";
 import { tapLikeBtn, quoteComm } from "./utils.js"
+import { format, parseISO } from '../node_modules/date-fns/index.js';
+import { ru } from '../node_modules/date-fns/locale/ru.js';
 
 export const renderComments = (commentsList) => {
     commentsList.innerHTML = "";
 
     // для каждого коммента из массива создаем нужную html-структуру
     comments.forEach((comment, index) => {
+      const formattedDate = format(parseISO(comment.date), 'dd.MM.yy HH:mm', { locale: ru })
+
       const li = document.createElement("li");
       li.className = "comment";
       li.innerHTML = `
         <div class="comment-header">
-          <div>${comment.name}</div>
-          <div>${comment.date}</div>
+          <div>${comment.author.name}</div>
+          <div>${formattedDate}</div>
         </div>
         <div class="comment-body">
           <div class="comment-text">
