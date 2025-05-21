@@ -1,11 +1,9 @@
-import { getComments } from "./utils.js";
+import { getComments, loader } from "./utils.js";
 import { replaceSymbols } from "./replaceSymbols.js";
-// import { format } from "date-fns";
-// import { ru } from 'date-fns/locale';
-// import { format } from '../node_modules/date-fns/index.js';
-// import { ru } from '../node_modules/date-fns/locale/ru.js';
-import { comments, updateComments } from "./comments.js";
+import { apiKey } from "./index.js";
 
+export const loaderNewComm = document.querySelector(".loaderNewComm");
+export const addForm = document.querySelector(".add-form");
 
 // Обработчик добавления комментария
 export const tapAddCommentBtn = (nameInput, commentInput, commentsList) => {
@@ -27,14 +25,28 @@ export const tapAddCommentBtn = (nameInput, commentInput, commentsList) => {
         name,
         text
       };
+
+      btn.disabled = true;
+      addForm.style.display = 'none';
+      loaderNewComm.textContent = 'Комментарий добавляется...'
+      loaderNewComm.style.display = 'block'
   
-      fetch('https://wedev-api.sky.pro/api/v1/lizzy-karankevich/comments', {
+      fetch(`https://wedev-api.sky.pro/api/v1/${apiKey}/comments`, {
         method: 'POST',
         body: JSON.stringify(newComment)
-      }).then(response => response.json())
-        .then(() => {
-          getComments(commentsList)
       })
+        .then(() => {
+          return getComments(commentsList)
+        })
+        .catch(error => {
+          console.error('Ошибка:', error);
+          return Promise.reject(error);
+       })
+        .finally(() => {
+          loaderNewComm.style.display = 'none'
+          addForm.style.display = 'flex';
+          btn.disabled = false;
+        });
 
       nameInput.value = "";
       commentInput.value = "";
