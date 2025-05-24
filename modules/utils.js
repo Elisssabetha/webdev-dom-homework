@@ -43,9 +43,22 @@ export const quoteComm = (li, comment) => {
       });
 }
 
+
 export const fetchComments = () => {
   return fetch(`https://wedev-api.sky.pro/api/v1/${apiKey}/comments`)
-    .then(response => response.json());
+    .then(response => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+      if (response.status === 500) {
+        throw new Error('Сервер сломался, попробуй позже');
+      }
+      throw new Error('Что-то пошло не так');
+    }
+    })
+    .catch(error => {
+      throw error; 
+    });
 };
 
 export const getComments = (commentsList) => {
@@ -56,7 +69,11 @@ export const getComments = (commentsList) => {
       renderComments(commentsList);
     })
     .catch(error => {
-      console.error('Ошибка при загрузке комментариев:', error);
+      if (error.message === 'Failed to fetch') {
+        alert('Кажется, у вас сломался интернет, попробуйте позже');
+      } else {
+      alert(error.message)
+      }
     })
     .finally(() => {
       loader.style.display = 'none';
