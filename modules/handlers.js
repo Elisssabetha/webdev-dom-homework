@@ -24,7 +24,7 @@ export const tapAddCommentBtn = (nameInput, commentInput, commentsList) => {
       const newComment = {
           name,
           text,
-          forceError: true  
+          forceError: false  
       };
 
       btn.disabled = true;
