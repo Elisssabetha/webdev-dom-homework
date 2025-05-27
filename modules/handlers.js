@@ -12,7 +12,7 @@ export const tapAddCommentBtn = () => {
   const commentInput = document.getElementById("commentInput");
   const addForm = document.querySelector(".add-form");
   
-  const handleClick = () => {
+  const handleClick = async () => {
       nameInput.classList.remove("error");
       commentInput.classList.remove("error");
 
@@ -41,8 +41,14 @@ export const tapAddCommentBtn = () => {
 
       container.appendChild(loader)
 
-      postComment(newComment);
+      try {
+        await postComment(newComment); // Ждём завершения запроса
+      } finally {
+        loader.remove(); // Удаляем лоадер после завершения
+        addForm.style.display = 'flex';
+        btn.disabled = false;
+      }
+    };
+    
+    btn.addEventListener("click", handleClick);
   };
-
-  btn.addEventListener("click", handleClick);
-};

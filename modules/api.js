@@ -32,7 +32,7 @@ export const fetchComments = () => {
 };
 
 export const postComment = (newComment) => {
-    fetch(`https://wedev-api.sky.pro/api/v2/${apiKey}/comments`, {
+    return fetch(`https://wedev-api.sky.pro/api/v2/${apiKey}/comments`, {
         method: 'POST',
         body: JSON.stringify(newComment),
         headers: {
@@ -65,12 +65,12 @@ export const postComment = (newComment) => {
             alert(error.message);
         }
     })
-    .finally(() => {
-        // loaderNewComm.style.display = 'none';
-        // addForm.style.display = 'flex';
-        btn.disabled = false;
+    // .finally(() => {
         
-    });
+    //     addForm.style.display = 'flex';
+    //     btn.disabled = false;
+        
+    // });
 };
 
 
