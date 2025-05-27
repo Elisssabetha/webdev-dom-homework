@@ -1,6 +1,6 @@
 import { comments, updateComments } from "./comments.js";
 import { renderComments } from "./render.js";
-import { apiKey } from "./index.js";
+import { fetchComments } from "./api.js";
 
 export const loader = document.querySelector(".loader"); 
 
@@ -13,19 +13,20 @@ function delay(interval = 300) {
 }
 
 // Обработчик лайков
-export const tapLikeBtn = (commentsList) => {
+export const tapLikeBtn = () => {
     document.querySelectorAll(".like-button").forEach((btn) => {
       btn.addEventListener("click", (event) => {
         event.stopPropagation();
         const index = btn.dataset.index;
+        const comment = comments[index]
 
         btn.disabled = true;
         btn.classList.add('-loading-like');
 
         delay(800).then(() => {
-          comments[index].isLiked = !comments[index].isLiked;
-          comments[index].likes += comments[index].isLiked ? 1 : -1;
-          renderComments(commentsList);
+          comment.isLiked = !comment.isLiked;
+          comment.likes += comment.isLiked ? 1 : -1;
+          renderComments();
         })
         .finally(() => {
           btn.disabled = false;
@@ -37,36 +38,25 @@ export const tapLikeBtn = (commentsList) => {
   };
 
 // Обработчик цитирования
-export const quoteComm = (li, comment) => {
-    li.addEventListener("click", (event) => {
-        commentInput.value = `>> ${comment.author.name}: \n>> ${comment.text}`;
-      });
+export const quoteComm = () => {
+  const commentEls = document.querySelectorAll('.comment')
+  commentEls.forEach((comm) => {
+    comm.addEventListener("click", () => {
+      const currentComm = comments[comm.dataset.index]
+      commentInput.value = `>> ${currentComm.author.name}: \n>> ${currentComm.text}`;
+    });
+  }) 
 }
 
-
-export const fetchComments = () => {
-  return fetch(`https://wedev-api.sky.pro/api/v1/${apiKey}/comments`)
-    .then(response => {
-      if (response.status === 200) {
-        return response.json();
-      } else {
-      if (response.status === 500) {
-        throw new Error('Сервер сломался, попробуй позже');
-      }
-      throw new Error('Что-то пошло не так');
-    }
-    })
-    .catch(error => {
-      throw error; 
-    });
-};
-
-export const getComments = (commentsList) => {
-  
+export const getComments = (isFirstLoading) => {
+  if (isFirstLoading) {
+    document.querySelector('.container').innerHTML = 
+    `<h2> Загрузка комментариев </h2>`
+  }
   fetchComments()
     .then(data => {
       updateComments(data.comments);
-      renderComments(commentsList);
+      renderComments();
     })
     .catch(error => {
       if (error.message === 'Failed to fetch') {
@@ -75,7 +65,4 @@ export const getComments = (commentsList) => {
       alert(error.message)
       }
     })
-    .finally(() => {
-      loader.style.display = 'none';
-    });
 };
